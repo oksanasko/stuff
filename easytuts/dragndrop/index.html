@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+        <title>Drag and Drop</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div id="left">
+                <div class="list" draggable="true"><img src="icon.png">List Item 1</div>
+                <div class="list" draggable="true"><img src="icon.png">List Item 2</div>
+                <div class="list" draggable="true"><img src="icon.png">List Item 3</div>
+                <div class="list" draggable="true"><img src="icon.png">List Item 4</div>
+            </div>
+            <div id="right"></div>
+        </div>
+        <script>
+            let lists = document.getElementsByClassName("list");
+            let rightbox = document.getElementById("right");
+            let leftbox = document.getElementById("left");
+
+            for(list of lists){
+                list.addEventListener("dragstart", function(e){
+                    let selected = e.target;
+                    selected.classList.add("is-dragging");
+
+                    const dragPreview = document.createElement("div");
+                    dragPreview.textContent = "📦 Dragging...";
+                    dragPreview.style.cssText = `
+                        width: 200px;
+                        padding: 0.5rem 1rem;
+                        background: #fff6d6;
+                        color: #333;
+                        border: 2px dashed orange;
+                        border-radius: 0.5rem;
+                        `;
+                    document.body.appendChild(dragPreview);
+                    
+                    e.dataTransfer.setDragImage(dragPreview,100,0);
+                     setTimeout(() => dragPreview.remove(), 0);
+
+                    rightbox.addEventListener("dragover", function(e){
+                        e.preventDefault();
+                    });
+                    rightbox.addEventListener("drop", function(e){
+                        rightbox.appendChild(selected);
+                        selected = null;
+                    });
+                    leftbox.addEventListener("dragover", function(e){
+                        e.preventDefault();
+                    });
+                    leftbox.addEventListener("drop", function(e){
+                        leftbox.appendChild(selected);
+                        selected = null;
+                    });
+                })
+                list.addEventListener("dragend", function(e){
+                    e.target.classList.remove("is-dragging")
+                })
+            }
+        </script>
+    </body>
+</html>
